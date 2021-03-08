@@ -1,4 +1,4 @@
-package se.ecutb;
+package se.ecutb.Field;
 
 public class Replay {
 }
