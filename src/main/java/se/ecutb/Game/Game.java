@@ -27,28 +27,35 @@ public class Game implements GameInterface {
     }
 
     @Override
-    public void engine() {
+    public void engine() throws InterruptedException {
         playingField.printField();
         System.out.print("\nEnter a number of rounds: ");
         while (!setRounds()) {
             System.out.print("Enter a number of rounds: ");
         }
-        printRounds();
-        while (!player1.getWinner() || !player2.getWinner()) {
-            playerChoice();
-            playingField.printField();
-            if (Math.round((double) turns/2)>=0) {
-                if(checkWinner(player1, player2)) {
-                    if (player1.getWinner()) {
-                        player1.setScore(player1.getScore()+1);
-                        System.out.println("Player 1 wins round " + playedRounds);
-                    } else {
-                        player2.setScore(player2.getScore()+1);
-                        System.out.println("Player 2 wins round " + playedRounds);
+        while (playedRounds<rounds) {
+            Thread.sleep(500);
+            printRounds();
+            while (!player1.getWinner() || !player2.getWinner()) {
+                playerChoice();
+                playingField.printField();
+                if (Math.round((double) turns / 2) >= 0) {
+                    if (checkWinner(player1, player2)) {
+                        if (player1.getWinner()) {
+                            player1.setScore(player1.getScore() + 1);
+                            System.out.println("Player 1 wins round " + playedRounds);
+                        } else {
+                            player2.setScore(player2.getScore() + 1);
+                            System.out.println("Player 2 wins round " + playedRounds);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
+            rounds++;
+            playingField.clearField();
+            player1.setWinner(false);
+            player2.setWinner(false);
         }
     }
 

@@ -32,6 +32,14 @@ public class PlayingField implements FieldInterface {
     }
 
     @Override
+    public void clearField() {
+        for (char[] row:
+                spaces) {
+            Arrays.fill(row, ' ');
+        }
+    }
+
+    @Override
     public int addPlay(int position, char playerSymbol, int rng) {
         try {
             for(int col=spaces[position-1].length-1; col>=0; col--) {
@@ -59,7 +67,6 @@ public class PlayingField implements FieldInterface {
                 if (spaces[col][row]==symbol || spaces[col+1][row]==symbol ||
                         spaces[row][col]==symbol || spaces[row+1][col]==symbol) {
                     numberInRow++;
-                    System.out.println("Numbers in row: " + numberInRow);
                     if (numberInRow==4) {
                         return true;
                     }

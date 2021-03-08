@@ -3,7 +3,7 @@ package se.ecutb.Game;
 import se.ecutb.Player;
 
 public interface GameInterface {
-    void engine();
+    void engine() throws InterruptedException;
     boolean setRounds();
     void printRounds();
     void playerChoice();
