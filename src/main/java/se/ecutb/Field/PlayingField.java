@@ -56,7 +56,8 @@ public class PlayingField implements FieldInterface {
         int numberInRow = 0;
         for(int row=0; row<spaces.length-1; row++) {
             for (int col=0; col<spaces[row].length; col++) {
-                if (spaces[col+1][row]==symbol || spaces[row][col]==symbol) {
+                if (spaces[col][row]==symbol || spaces[col+1][row]==symbol ||
+                        spaces[row][col]==symbol || spaces[row+1][col]==symbol) {
                     numberInRow++;
                     System.out.println("Numbers in row: " + numberInRow);
                     if (numberInRow==4) {

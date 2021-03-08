@@ -40,8 +40,10 @@ public class Game implements GameInterface {
             if (Math.round((double) turns/2)>=0) {
                 if(checkWinner(player1, player2)) {
                     if (player1.getWinner()) {
+                        player1.setScore(player1.getScore()+1);
                         System.out.println("Player 1 wins round " + playedRounds);
                     } else {
+                        player2.setScore(player2.getScore()+1);
                         System.out.println("Player 2 wins round " + playedRounds);
                     }
                     break;
@@ -98,10 +100,8 @@ public class Game implements GameInterface {
     @Override
     public boolean checkRow(Player player) {
         if (playingField.straightRows(player.getSymbol())) {
-            player.setScore(player.getScore()+1);
             return true;
         } else {
-            player.setScore(player.getScore()+1);
             return playingField.diagonalRow(player.getSymbol());
         }
     }
