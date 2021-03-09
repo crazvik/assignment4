@@ -14,7 +14,6 @@ public class Game implements GameInterface {
     private int playedRounds;
     private int turns;
     private int RNG;
-    private boolean winner;
 
     public Game() {
         this.player1 = new Player('X');
@@ -34,12 +33,11 @@ public class Game implements GameInterface {
             System.out.print("Enter a number of rounds: ");
         }
         while (playedRounds<rounds) {
-            Thread.sleep(500);
             printRounds();
             while (!player1.getWinner() || !player2.getWinner()) {
                 playerChoice();
                 playingField.printField();
-                if (Math.round((double) turns / 2) >= 0) {
+                if (Math.round((double) turns / 2) >= 0) { // Minimum amount of turns before potential victory
                     if (checkWinner(player1, player2)) {
                         if (player1.getWinner()) {
                             player1.setScore(player1.getScore() + 1);
@@ -48,11 +46,17 @@ public class Game implements GameInterface {
                             player2.setScore(player2.getScore() + 1);
                             System.out.println("Player 2 wins round " + playedRounds);
                         }
+                        System.out.println("\nPlayer 1 score: " + player1.getScore() +
+                                            "\nPlayer 2 score: " + player2.getScore());
                         break;
                     }
                 }
+                if (turns==44) {
+                    rounds--;
+                    System.out.println("Tie!");
+                    break;
+                }
             }
-            rounds++;
             playingField.clearField();
             player1.setWinner(false);
             player2.setWinner(false);
@@ -95,6 +99,7 @@ public class Game implements GameInterface {
 
     @Override
     public boolean checkWinner(Player player1, Player player2) {
+
         if (RNG==2) {
             player1.setWinner(checkRow(player1));
             return player1.getWinner();
@@ -106,10 +111,14 @@ public class Game implements GameInterface {
 
     @Override
     public boolean checkRow(Player player) {
-        if (playingField.straightRows(player.getSymbol())) {
+        if (playingField.horizontalRows(player.getSymbol())) {
+            return true;
+        } else if (playingField.verticalRows(player.getSymbol())) {
+            return true;
+        } else if (playingField.diagonalRowRight(player.getSymbol())){
             return true;
         } else {
-            return playingField.diagonalRow(player.getSymbol());
+            return playingField.diagonalRowLeft(player.getSymbol());
         }
     }
 

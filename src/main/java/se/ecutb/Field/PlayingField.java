@@ -42,9 +42,9 @@ public class PlayingField implements FieldInterface {
     @Override
     public int addPlay(int position, char playerSymbol, int rng) {
         try {
-            for(int col=spaces[position-1].length-1; col>=0; col--) {
-                if (spaces[position-1][col] == ' ') {
-                    spaces[position-1][col] = playerSymbol;
+            for(int row=spaces.length-1; row>0; row--) {
+                if (spaces[position-1][row-1] == ' ') {
+                    spaces[position-1][row-1] = playerSymbol;
                     if (rng==1) {
                         return 2;
                     } else {
@@ -52,6 +52,7 @@ public class PlayingField implements FieldInterface {
                     }
                 }
             }
+            System.out.println("Position already taken! Please chose another");
             return rng;
         } catch (IndexOutOfBoundsException e) {
             System.out.println("Out of bounds! Try again");
@@ -60,18 +61,14 @@ public class PlayingField implements FieldInterface {
     }
 
     @Override
-    public boolean straightRows(char symbol) {
-        int numberInRow = 0;
-        for(int row=0; row<spaces.length-1; row++) {
-            for (int col=0; col<spaces[row].length; col++) {
-                if (spaces[col][row]==symbol || spaces[col+1][row]==symbol ||
-                        spaces[row][col]==symbol || spaces[row+1][col]==symbol) {
-                    numberInRow++;
-                    if (numberInRow==4) {
-                        return true;
-                    }
-                } else {
-                    numberInRow=0;
+    public boolean horizontalRows(char symbol) {
+        for(int row=spaces.length-2; row>0; row--) {
+            for (int col=0; col<=3; col++) {
+                if (spaces[col][row]==symbol
+                        && spaces[col+1][row]==symbol
+                        && spaces[col+2][row]==symbol
+                        && spaces[col+3][row]==symbol) {
+                    return true;
                 }
             }
         }
@@ -79,7 +76,47 @@ public class PlayingField implements FieldInterface {
     }
 
     @Override
-    public boolean diagonalRow(char symbol) {
+    public boolean verticalRows(char symbol) {
+        for(int col=0; col<spaces.length-1; col++) {
+            for(int row=spaces[col].length-1; row>=3; row--) {
+                if (spaces[col][row]==symbol
+                        && spaces[col][row-1]==symbol
+                        && spaces[col][row-2]==symbol
+                        && spaces[col][row-3]==symbol) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean diagonalRowRight(char symbol) {
+        for(int col=0; col<=3; col++) {
+            for (int row=spaces[col].length-1; row>=0; row--) {
+                if (spaces[col][row]==symbol
+                        && spaces[col+1][row-1]==symbol
+                        && spaces[col+2][row-2]==symbol
+                        && spaces[col+3][row-3]==symbol) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean diagonalRowLeft(char symbol) {
+        for(int col=spaces.length-1; col>=3; col--) {
+            for (int row=spaces[col].length-1; row>=0; row--) {
+                if (spaces[col][row]==symbol
+                        && spaces[col-1][row-1]==symbol
+                        && spaces[col-2][row-2]==symbol
+                        && spaces[col-3][row-3]==symbol) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 
@@ -100,6 +137,13 @@ public class PlayingField implements FieldInterface {
         }
         System.out.println("+");
     }
+
+
+     || spaces[row+1][col]==symbol
+     spaces[col+1][row]==symbol ||
+
+
+
 
     public int addPlay(int position, char playerSymbol, int rng) {
         for(int col=spaces[position].length-1; col>=0; col--) {
