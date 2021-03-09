@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public class PlayingField implements FieldInterface {
     private final char[][] spaces;
+    private Replay replay;
 
     public PlayingField() {
         this.spaces = new char[7][6];
@@ -11,10 +12,16 @@ public class PlayingField implements FieldInterface {
              spaces) {
             Arrays.fill(row, ' ');
         }
+        this.replay = new Replay();
     }
 
     @Override
     public void printField() {
+        printField(spaces);
+        System.out.println("+");
+    }
+
+    public static void printField(char[][] spaces) {
         for (int col = 0; col < spaces[0].length; col++) {
             for (int i = 0; i < spaces.length; i++) {
                 System.out.print("+ - ");
@@ -28,7 +35,6 @@ public class PlayingField implements FieldInterface {
         for (int i = 0; i < spaces.length; i++) {
             System.out.print("+ - ");
         }
-        System.out.println("+");
     }
 
     @Override
@@ -41,10 +47,14 @@ public class PlayingField implements FieldInterface {
 
     @Override
     public int addPlay(int position, char playerSymbol, int rng) {
+        int[][][] tempArr = new int[1][1][2];
         try {
             for(int row=spaces.length-1; row>0; row--) {
                 if (spaces[position-1][row-1] == ' ') {
                     spaces[position-1][row-1] = playerSymbol;
+                    tempArr[0][0][0] = position-1;
+                    tempArr[0][0][1] = row-1;
+                    replay.addLastMove(tempArr[0], playerSymbol);
                     if (rng==1) {
                         return 2;
                     } else {
@@ -120,82 +130,9 @@ public class PlayingField implements FieldInterface {
         return false;
     }
 
-    /*
-    public void printField() {
-        for (int col = 0; col < spaces[0].length; col++) {
-            for (int i = 0; i < spaces.length; i++) {
-                System.out.print("+ - ");
-            }
-            System.out.println("+");
-            for (int i = 0; i <= spaces[0].length; i++) {
-                System.out.print("| " + spaces[i][col] + " ");
-            }
-            System.out.println("|");
-        }
-        for (int i = 0; i < spaces.length; i++) {
-            System.out.print("+ - ");
-        }
-        System.out.println("+");
+    @Override
+    public void runReplay() throws InterruptedException {
+        clearField();
+        replay.printLastMove(spaces);
     }
-
-
-     || spaces[row+1][col]==symbol
-     spaces[col+1][row]==symbol ||
-
-
-
-
-    public int addPlay(int position, char playerSymbol, int rng) {
-        for(int col=spaces[position].length-1; col>=0; col--) {
-            if (spaces[position][col] == ' ') {
-                spaces[position][col] = playerSymbol;
-                if (rng==1) {
-                    return 2;
-                } else {
-                    return 1;
-                }
-            }
-        }
-        printField();
-        return rng;
-    }
-
-    public Player checkWinner(Player player) {
-
-        return player;
-    }
-
-    public boolean horizontalRow() {
-        for(int row=spaces.length-1; row>=0; row--) {
-            int numberInRow = 0;
-            for (int col=0; col<spaces[row].length; col++) {
-                if (spaces[row][col]!=' ') {
-                    numberInRow++;
-                }
-                if (numberInRow==4) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean verticalRow() {
-        for (char[] space : spaces) {
-            int numberInRow = 0;
-            for (int col = space.length - 1; col > 0; col--) {
-                if (space[col] != ' ') {
-                    numberInRow++;
-                }
-                if (numberInRow == 4) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    public boolean diagonalRow() {
-        return false;
-    }*/
 }

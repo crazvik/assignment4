@@ -4,6 +4,7 @@ import se.ecutb.Player;
 import se.ecutb.Field.PlayingField;
 
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class Game implements GameInterface {
     private final Player player1;
@@ -41,10 +42,8 @@ public class Game implements GameInterface {
                     if (checkWinner(player1, player2)) {
                         if (player1.getWinner()) {
                             player1.setScore(player1.getScore() + 1);
-                            System.out.println("Player 1 wins round " + playedRounds);
                         } else {
                             player2.setScore(player2.getScore() + 1);
-                            System.out.println("Player 2 wins round " + playedRounds);
                         }
                         System.out.println("\nPlayer 1 score: " + player1.getScore() +
                                             "\nPlayer 2 score: " + player2.getScore());
@@ -57,10 +56,23 @@ public class Game implements GameInterface {
                     break;
                 }
             }
+            if (Math.round((double) rounds/2)<=player1.getScore()) {
+                System.out.println("\nPlayer 1 wins!");
+                break;
+            } else if (Math.round((double) rounds/2)<=player2.getScore()) {
+                System.out.println("\nPlayer 2 wins!");
+                break;
+            }
             playingField.clearField();
             player1.setWinner(false);
             player2.setWinner(false);
+            TimeUnit.SECONDS.sleep(1);
         }
+        System.out.print("Do you want to see a replay of the last round? Type Y for yes: ");
+        if (scanner.nextLine().equalsIgnoreCase("Y")) {
+            playingField.runReplay();
+        }
+        System.out.println("\nThanks for playing!");
     }
 
     @Override
@@ -99,7 +111,6 @@ public class Game implements GameInterface {
 
     @Override
     public boolean checkWinner(Player player1, Player player2) {
-
         if (RNG==2) {
             player1.setWinner(checkRow(player1));
             return player1.getWinner();
@@ -121,45 +132,4 @@ public class Game implements GameInterface {
             return playingField.diagonalRowLeft(player.getSymbol());
         }
     }
-
-    /*
-    public void setRounds() {
-        try {
-            System.out.print("Enter a number of rounds: ");
-            rounds = Integer.parseInt(scanner.nextLine());
-        } catch (NumberFormatException e) {
-            System.out.println("Not a number");
-            setRounds();
-        } finally {
-            playingField.printField();
-            round();
-        }
-    }
-
-    public void round() {
-        RNG = (int)(Math.random()*2+1);
-        playedRounds++;
-        System.out.println("Round " + playedRounds);
-        System.out.println("Player " + RNG + " starts");
-        playerChoice();
-    }
-
-    public void playerChoice() {
-        while (!player1.getWinner() || !player2.getWinner()) {
-            try {
-                if (RNG == 1) {
-                    System.out.print("Choose a position: ");
-                    RNG = playingField.addPlay(Integer.parseInt(scanner.nextLine()), player1.getSymbol(), RNG);
-                } else {
-                    System.out.print("Choose a position: ");
-                    RNG = playingField.addPlay(Integer.parseInt(scanner.nextLine()), 'O', RNG);
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Not a number");
-                playerChoice();
-            }
-        }
-    }
-     */
-
 }

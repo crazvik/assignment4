@@ -8,5 +8,6 @@ public interface FieldInterface {
     boolean verticalRows(char symbol);
     boolean diagonalRowRight(char symbol);
     boolean diagonalRowLeft(char symbol);
+    void runReplay() throws InterruptedException;
 }
 
