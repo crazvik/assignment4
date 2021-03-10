@@ -1,12 +1,12 @@
-package se.ecutb.Game;
+package se.ecutb.game;
 
 import se.ecutb.Player;
-import se.ecutb.Field.PlayingField;
+import se.ecutb.field.PlayingField;
 
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class Game implements GameInterface {
+public class Game {
     private final Player player1;
     private final Player player2;
     private final PlayingField playingField;
@@ -26,19 +26,47 @@ public class Game implements GameInterface {
         this.turns = 0;
     }
 
-    @Override
+    public int getRounds() {
+        return rounds;
+    }
+
+    public int getPlayedRounds() {
+        return playedRounds;
+    }
+
+    public int getTurns() {
+        return turns;
+    }
+
+    public int getRNG() {
+        return RNG;
+    }
+
+    public void setRNG(int RNG) {
+        this.RNG = RNG;
+    }
+
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
     public void engine() throws InterruptedException {
         playingField.printField();
         System.out.print("\nEnter a number of rounds: ");
-        while (!setRounds()) {
+        while (!setRounds(Integer.parseInt(scanner.nextLine()))) {
             System.out.print("Enter a number of rounds: ");
         }
         while (playedRounds<rounds) {
             printRounds();
             while (!player1.getWinner() || !player2.getWinner()) {
-                playerChoice();
+                System.out.print("\nPlayer " + RNG + ", choose a position between 1-7: ");
+                playerChoice(Integer.parseInt(scanner.nextLine()));
                 playingField.printField();
-                if (Math.round((double) turns / 2) >= 0) { // Minimum amount of turns before potential victory
+                if (turns>=7) { // Minimum amount of turns before potential victory
                     if (checkWinner(player1, player2)) {
                         if (player1.getWinner()) {
                             player1.setScore(player1.getScore() + 1);
@@ -50,7 +78,7 @@ public class Game implements GameInterface {
                         break;
                     }
                 }
-                if (turns==44) {
+                if (turns==49) {
                     rounds--;
                     System.out.println("Tie!");
                     break;
@@ -63,22 +91,26 @@ public class Game implements GameInterface {
                 System.out.println("\nPlayer 2 wins!");
                 break;
             }
+            System.out.print("Do you want to see a replay of the last round? Type Y for yes: ");
+            if (scanner.nextLine().equalsIgnoreCase("Y")) {
+                playingField.runReplay();
+            }
             playingField.clearField();
             player1.setWinner(false);
             player2.setWinner(false);
-            TimeUnit.SECONDS.sleep(1);
+            TimeUnit.SECONDS.sleep(1); // To make the console easier to read
         }
         System.out.print("Do you want to see a replay of the last round? Type Y for yes: ");
         if (scanner.nextLine().equalsIgnoreCase("Y")) {
             playingField.runReplay();
         }
+        scanner.close();
         System.out.println("\nThanks for playing!");
     }
 
-    @Override
-    public boolean setRounds() {
+    public boolean setRounds(int choice) {
         try {
-            this.rounds = Integer.parseInt(scanner.nextLine());
+            this.rounds = choice;
             return true;
         } catch (NumberFormatException e) {
             System.out.println("Not a number");
@@ -86,7 +118,6 @@ public class Game implements GameInterface {
         }
     }
 
-    @Override
     public void printRounds() {
         RNG = (int)(Math.random()*2+1);
         playedRounds++;
@@ -94,14 +125,12 @@ public class Game implements GameInterface {
         System.out.println("Player " + RNG + " starts");
     }
 
-    @Override
-    public void playerChoice() {
+    public void playerChoice(int choice) {
         try {
-            System.out.print("\nPlayer " + RNG + ", choose a position between 1-7: ");
             if (RNG == 1) {
-                RNG = playingField.addPlay(Integer.parseInt(scanner.nextLine()), player1.getSymbol(), RNG);
+                RNG = playingField.addPlay(choice, player1.getSymbol(), RNG);
             } else {
-                RNG = playingField.addPlay(Integer.parseInt(scanner.nextLine()), player2.getSymbol(), RNG);
+                RNG = playingField.addPlay(choice, player2.getSymbol(), RNG);
             }
             turns++;
         } catch (NumberFormatException e) {
@@ -109,7 +138,6 @@ public class Game implements GameInterface {
         }
     }
 
-    @Override
     public boolean checkWinner(Player player1, Player player2) {
         if (RNG==2) {
             player1.setWinner(checkRow(player1));
@@ -120,7 +148,6 @@ public class Game implements GameInterface {
         }
     }
 
-    @Override
     public boolean checkRow(Player player) {
         if (playingField.horizontalRows(player.getSymbol())) {
             return true;

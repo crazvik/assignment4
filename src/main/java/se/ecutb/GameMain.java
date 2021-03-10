@@ -1,9 +1,9 @@
 package se.ecutb;
 
-import se.ecutb.Game.Game;
+import se.ecutb.game.Game;
 
 public class GameMain {
-    public static Game game = new Game();
+    public static final Game game = new Game();
     public static void main( String[] args ) throws InterruptedException {
         game.engine();
     }

@@ -1,10 +1,14 @@
-package se.ecutb.Field;
+package se.ecutb.field;
 
 import java.util.Arrays;
 
-public class PlayingField implements FieldInterface {
+public class PlayingField {
     private final char[][] spaces;
-    private Replay replay;
+    private final Replay replay;
+
+    public char[][] getSpaces() {
+        return spaces;
+    }
 
     public PlayingField() {
         this.spaces = new char[7][6];
@@ -15,10 +19,8 @@ public class PlayingField implements FieldInterface {
         this.replay = new Replay();
     }
 
-    @Override
     public void printField() {
         printField(spaces);
-        System.out.println("+");
     }
 
     public static void printField(char[][] spaces) {
@@ -35,9 +37,9 @@ public class PlayingField implements FieldInterface {
         for (int i = 0; i < spaces.length; i++) {
             System.out.print("+ - ");
         }
+        System.out.println("+");
     }
 
-    @Override
     public void clearField() {
         for (char[] row:
                 spaces) {
@@ -45,7 +47,6 @@ public class PlayingField implements FieldInterface {
         }
     }
 
-    @Override
     public int addPlay(int position, char playerSymbol, int rng) {
         int[][][] tempArr = new int[1][1][2];
         try {
@@ -70,7 +71,6 @@ public class PlayingField implements FieldInterface {
         }
     }
 
-    @Override
     public boolean horizontalRows(char symbol) {
         for(int row=spaces.length-2; row>0; row--) {
             for (int col=0; col<=3; col++) {
@@ -85,7 +85,6 @@ public class PlayingField implements FieldInterface {
         return false;
     }
 
-    @Override
     public boolean verticalRows(char symbol) {
         for(int col=0; col<spaces.length-1; col++) {
             for(int row=spaces[col].length-1; row>=3; row--) {
@@ -100,7 +99,6 @@ public class PlayingField implements FieldInterface {
         return false;
     }
 
-    @Override
     public boolean diagonalRowRight(char symbol) {
         for(int col=0; col<=3; col++) {
             for (int row=spaces[col].length-1; row>=0; row--) {
@@ -115,7 +113,6 @@ public class PlayingField implements FieldInterface {
         return false;
     }
 
-    @Override
     public boolean diagonalRowLeft(char symbol) {
         for(int col=spaces.length-1; col>=3; col--) {
             for (int row=spaces[col].length-1; row>=0; row--) {
@@ -130,7 +127,6 @@ public class PlayingField implements FieldInterface {
         return false;
     }
 
-    @Override
     public void runReplay() throws InterruptedException {
         clearField();
         replay.printLastMove(spaces);
